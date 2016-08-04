@@ -1,5 +1,5 @@
 from nose.tools import *
-from pydnx.factory import build_generalRepCharacteristics, build_generalIECharacteristics
+from pydnx.factory import build_generalRepCharacteristics, build_generalIECharacteristics, build_generalFileCharacteristics
 from lxml import etree as ET
 
 def setup():
@@ -42,3 +42,19 @@ def test_generalIECharacteristics_with_bad_values():
 	except TypeError:
 		grc = None
 	assert(grc == None)
+
+def test_generalFileCharacteristics():
+	gfc = build_generalFileCharacteristics(label="Test File",
+		FileEntityType="TestFile", fileSizeBytes="10092")
+	print("printing general File Characteristics:")
+	print(ET.tostring(gfc, pretty_print=True))
+
+
+def test_generalFileCharacteristics_with_bad_values():
+	print("Testing building generalFileCharacteristics with incorrect values")
+	try:
+		gfc = build_generalIECharacteristics(label="Dodgy_test", 
+			animalType="Horsey")
+	except TypeError:
+		gfc = None
+	assert(gfc == None)

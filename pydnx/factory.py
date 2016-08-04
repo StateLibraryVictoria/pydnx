@@ -40,3 +40,12 @@ def build_generalIECharacteristics(submissionReason=None, status=None, statusDat
 		IEEntityType=None, UserDefinedA=None, UserDefinedB=None, UserDefinedC=None):
 		# Note: statusDate is supposed to be used by the system only - consider removing
 	return build_generic_section('generalIECharacteristics', locals())
+
+
+def build_generalFileCharacteristics(label=None, note=None,
+	FileEntityType=None, compositionLevel=None, fileLocationType=None, 
+	fileLocation=None, fileOriginalName=None,
+	fileOriginalPath=None, fileOriginalID=None, fileExtension=None,
+	fileMIMEType=None, fileSizeBytes=None, storageID=None, streamRefId=None,
+	formatLibraryId=None, riskLibraryIdentifiers=None):
+	return build_generic_section('generalFileCharacteristics', locals())
