@@ -1,5 +1,5 @@
 from nose.tools import *
-from pydnx.factory import build_generalRepCharacteristics
+from pydnx.factory import build_generalRepCharacteristics, build_generalIECharacteristics
 from lxml import etree as ET
 
 def setup():
@@ -22,6 +22,23 @@ def test_generalRepCharacteristics_with_bad_values():
 	print("Testing building generalRepCharaceristics with incorrect values")
 	try:
 		grc = build_generalRepCharacteristics(label="Test Horsey", animalType="Horsey")
+	except TypeError:
+		grc = None
+	assert(grc == None)
+
+
+def test_generalIECharacteristics():
+	grc = build_generalIECharacteristics(submissionReason='Unpublished Donation',
+		status='ACTIVE',
+		IEEntityType='UnpublishedBornDigital')
+	print("printing general IE Characteristics:")
+	print(ET.tostring(grc, pretty_print=True))
+
+
+def test_generalIECharacteristics_with_bad_values():
+	print("Testing building generalIECharaceristics with incorrect values")
+	try:
+		grc = build_generalIECharacteristics(submissionReason="Dodgy_test", animalType="Horsey")
 	except TypeError:
 		grc = None
 	assert(grc == None)

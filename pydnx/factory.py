@@ -34,3 +34,9 @@ def build_generalRepCharacteristics(label=None, preservationType=None, usageType
 		RepresentationCode=None, TaskID=None, RepresentationOriginalName=None, UserDefinedA=None,
 		UserDefinedB=None, UserDefinedC=None):
 	return build_generic_section('generalRepCharacteristics', locals())
+
+
+def build_generalIECharacteristics(submissionReason=None, status=None, statusDate=None,
+		IEEntityType=None, UserDefinedA=None, UserDefinedB=None, UserDefinedC=None):
+		# Note: statusDate is supposed to be used by the system only - consider removing
+	return build_generic_section('generalIECharacteristics', locals())
