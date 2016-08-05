@@ -32,9 +32,6 @@ strict = True
 class Dnx(ET.ElementBase):
     TAG = '{http://www.exlibrisgroup.com/dps/dnx}dnx'
 
-class GeneralRepCharacteristics(ET.ElementBase):
-
-    def _init(self):
 
 
 
