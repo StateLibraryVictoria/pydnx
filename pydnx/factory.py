@@ -27,6 +27,20 @@ def _build_generic_section(section_name, keynames=None):
             record_key.text = keynames[key]
     return section
 
+def _build_generic_repeatable_section(section_name, allowed_keys, *args):
+    section = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}section',
+        id=section_name)
+    for arg in args:
+        record = ET.SubElement(section, '{http://www.exlibrisgroup.com/dps/dnx}record')
+        for key in arg.keys():
+            if key in allowed_keys:
+                record_key = ET.SubElement(record, '{http://www.exlibrisgroup.com/dps/dnx}key')
+                record_key.attrib['ID'] = key
+                record_key.text = arg[key]
+            else:
+                raise ValueError("\"{}\" is not a permitted key in {} record dictionary ( acceptable values are {} )".format(
+                    key, section_name, allowed_keys))
+    return section
 
 def build_generalIECharacteristics(submissionReason=None, status=None, statusDate=None,
         IEEntityType=None, UserDefinedA=None, UserDefinedB=None, UserDefinedC=None):
@@ -90,3 +104,102 @@ def build_preservationLevel(preservationLevelValue=None,
         preservationLevelRole=None, preservationLevelRationale=None,
         preservationLevelDateAssigned=None):
     return _build_generic_section('preservationLevel', locals())
+
+
+# def build_significantProperties(*args):
+#     section = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}section',
+#         id='significantProperties')
+#     for arg in args:
+#         record = ET.SubElement(section, '{http://www.exlibrisgroup.com/dps/dnx}record')
+#         for key in arg.keys():
+#             record_key = ET.SubElement(record, '{http://www.exlibrisgroup.com/dps/dnx}key')
+#             record_key.attrib['ID'] = key
+#             record_key.text = arg[key]
+#     return section
+
+def build_significantProperties(*args):
+    allowed_keys = ['significantPropertiesType', 'significantPropertiesValue',
+                    'significantProperiesExtension']
+    return _build_generic_repeatable_section('significantProperties', 
+        allowed_keys, *args)
+
+def build_fileFixity(*args):
+    allowed_keys = ['agent', 'fixityType', 'fixityValue']
+    return _build_generic_repeatable_section('fileFixity', allowed_keys,
+        *args)
+
+def build_creatingApplication(creatingApplicationName=None,
+        creatingApplicationVersion=None,
+        dateCreatedByApplication=None,
+        creatingApplicationExtension=None):
+    return _build_generic_section('creatingApplication', locals())
+
+
+def build_inhibitors(*args):
+    allowed_keys = ['inhibitorType', 'inhibitorTarget', 'inhibitorKey']
+    return _build_generic_repeatable_section('inhibitors', allowed_keys,
+        *args)
+
+
+def build_environment(*args):
+    allowed_keys = ['environmentCharacteristic', 'environmentPurpose',
+        'environmentNote']
+    return _build_generic_repeatable_section('environment', allowed_keys,
+        *args)
+
+
+def build_environmentDependencies(*args):
+    allowed_keys = ['dependencyName', 'dependencyIdentifierValue1',
+        'dependencyIdentifierValue1', 'dependencyIdentifierType2',
+        'dependencyIdentifierType2', 'dependencyIdentifierValue3',
+        'dependencyIdentifierType3']
+    return _build_generic_repeatable_section('environmentDependencies', 
+            allowed_keys, *args)
+
+def build_environmentSoftware(*args):
+    allowed_keys = ['softwareName', 'softwareVersion', 'softwareType',
+        'softwareOtherInformation', 'softwareOtherInformation',
+        'softwareDependancy']
+    return _build_generic_repeatable_section('environmentSoftware',
+            allowed_keys, *args)
+
+def build_environmentSoftwareRegistry(*args):
+    return _build_generic_repeatable_section('environmentSoftwareRegistry',
+        ['registryId'], *args)
+
+def build_environmentHardware(*args):
+    allowed_keys = ['hardwareName', 'hardwareType', 'hardwareOtherInformation']
+    return _build_generic_repeatable_section('environmentHardware',
+        allowed_keys, *args)
+
+def build_envHardwareRegistry(*args):
+    return _build_generic_repeatable_section('environmentSoftwareRegistry',
+        ['registryId'], *args)
+
+def build_environmentExtension(*args):
+    return _build_generic_repeatable_section('environmentExtension',
+        ['environmentExtension'], *args)
+
+def build_signatureInformation(*args):
+    allowed_keys = ['signatureInformationEncoding', 'signer', 'signatureMethod',
+        'signatureValue', 'signatureValidationRules', 'signatureProperties',
+        'keyInformation']
+    return _build_generic_repeatable_section('signatureInformation',
+        allowed_keys, *args)
+
+
+def build_relationship(*args):
+    allowed_keys = ['relationshipType', 'relationshipSubType',
+        'relatedObjectIdentifierType1', 'relatedObjectIdentifierValue1',
+        'relatedObjectSequence1', 'relatedObjectIdentfierType2',
+        'relatedObjectIdentifierValue2', 'relatedObjectSequence2',
+        'relatedObjectIdentifierType3', 'relatedObjectIdentifierValue3',
+        'relatedObjectSequence3']
+    return _build_generic_repeatable_section('relationship', allowed_keys,
+        *args)
+
+
+def build_linkingIEIdentifier(*args):
+    allowed_keys = ['linkingIEIdentifierType', 'linkingIEIdentifierValue']
+    return _build_generic_repeatable_section('linkingIEIdentifier',
+        allowed_keys, *args)
