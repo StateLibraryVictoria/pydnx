@@ -203,3 +203,17 @@ def build_linkingIEIdentifier(*args):
     allowed_keys = ['linkingIEIdentifierType', 'linkingIEIdentifierValue']
     return _build_generic_repeatable_section('linkingIEIdentifier',
         allowed_keys, *args)
+
+def build_event(*args):
+    allowed_keys = ['eventIdentifierType', 'eventIdentifierValue', 'eventType',
+        'eventDescription', 'eventDateTime', 'eventOutcome1',
+        'eventOutcomeDetail1', 'eventOutcomeDetailExtension1',
+        'eventOutcome2', 'eventOutcomeDetail2', 'eventOutcomeDetailExtension2',
+        'eventOutcome2', 'eventOutcomeDetail2', 'eventOutcomeDetailExtension2',
+        'linkingAgentIdentifierXMLID1', 'linkingAgentIdentifierType1',
+        'linkingAgentIdentifierValue1', 'linkingAgentRole1',
+        'linkingAgentIdentifierXMLID2', 'linkingAgentIdentifierType2',
+        'linkingAgentIdentifierValue2', 'linkingAgentRole2',
+        'linkingAgentIdentifierXMLID3', 'linkingAgentIdentifierType3',
+        'linkingAgentIdentifierValue3', 'linkingAgentRole3']
+    return _build_generic_repeatable_section('event', allowed_keys, *args)

@@ -306,10 +306,26 @@ def test_linkingIEIdentifier():
         {'linkingIEIdentifierType': 'Appendix',
          'linkingIEIdentifierValue': 'IE1001',})
 
-def test_linkingIEIdentifier():
+def test_linkingIEIdentifier_bad_values():
     try:
         esr = generic_multi_record_good_values(f.build_linkingIEIdentifier,
             {'animal': 'Horsey!'})
     except ValueError:
         esr = None
     assert(esr == None)
+
+
+def test_event():
+    generic_multi_record_good_values(f.build_event,
+        {'eventType': 'PRE_INGEST',
+         'eventDescription': 'preconditioning',
+         'eventDateTime': '2016-08-21T09:17:22NZST',
+         'eventOutcome1': 'File extension changed from ".tx" to ".txt"'})
+
+def test_event_bad_values():
+    try:
+        gsr = generic_multi_record_bad_values(f.build_event,
+            {'animal': 'horsey!'})
+    except ValueError:
+        gsr = None
+    assert(gsr == None)
