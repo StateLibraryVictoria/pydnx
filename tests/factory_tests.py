@@ -324,8 +324,81 @@ def test_event():
 
 def test_event_bad_values():
     try:
-        gsr = generic_multi_record_bad_values(f.build_event,
+        evt = generic_multi_record_bad_values(f.build_event,
             {'animal': 'horsey!'})
     except ValueError:
-        gsr = None
-    assert(gsr == None)
+        evt = None
+    assert(evt == None)
+
+
+def test_linkingRightsStatementIdentifier():
+    generic_multi_record_good_values(f.build_linkingRightsStatementIdentifier,
+        {'linkingRightsStatementIdentifierType': 'CMSRightsID',
+         'linkingRightsStatementIdentifierValue': '0001'})
+
+def test_linkingRightsStatementIdentifier_bad_values():
+    try:
+        lrsi = generic_multi_record_bad_values(f.build_linkingRightsStatementIdentifier,
+            {'animal': 'horsey!'})
+    except ValueError:
+        lrsi = None
+    assert(lrsi == None)
+
+def test_accessRightsPolicy():
+    generic_good_values(f.build_accessRightsPolicy, policyId='100',
+        policyDescription='Open Access')
+
+def test_accessRightsPolicy_bad_values():
+    generic_bad_values(f.build_accessRightsPolicy, policyId='400',
+        policyDescription='restricted access',
+        animal='horsey-worsey!')
+
+def test_retentionPeriodPolicy():
+    generic_good_values(f.build_retentionPeriodPolicy, policyId='99YEARS',
+        policyDescription="I got 99 problems but a retention policy ain't one")
+
+def test_retentionPeriodPolicy_bad_values():
+    generic_bad_values(f.build_retentionPeriodPolicy, policyId='5YEARS',
+        animal='horsey!')
+
+def test_grantedRightsStatement():
+    generic_multi_record_good_values(f.build_grantedRightsStatement, 
+        {'grantedRightsStatementIdentifier': 'grsID',
+        'grantedRightsStatementValue': '000001'})
+
+def test_grantedRightsStatement_bad_values():
+    try:
+        grs = generic_multi_record_bad_values(f.build_linkingRightsStatementIdentifier,
+            {'animal': 'horsey!'})
+    except ValueError:
+        grs = None
+    assert(grs == None)
+
+def test_collection():
+    generic_multi_record_good_values(f.build_collection,
+        {'collectionID': 'coll99',
+         'collectionName': 'Primary Collection'})
+
+def test_collection_bad_values():
+    try:
+        c = generic_multi_record_bad_values(f.build_collection,
+            {'animal': 'horsey!'})
+    except ValueError:
+        c = None
+    assert(c == None)
+
+
+def test_build_ie_amdTech():
+    gic = [{'submissionReason': 'bornDigital', 'IEEntityType': 'periodicIE'}]
+    ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic)
+    print(ET.tostring(ieamdtech))
+
+
+def test_build_ie_amdTech_bad_values():
+    gic = [{'animal': 'horsey', 'IEEntityType': 'periodicIE'}]
+    oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
+    try:
+        ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic)
+    except TypeError:
+        ieamdtech = None
+    assert(ieamdtech == None)

@@ -217,3 +217,55 @@ def build_event(*args):
         'linkingAgentIdentifierXMLID3', 'linkingAgentIdentifierType3',
         'linkingAgentIdentifierValue3', 'linkingAgentRole3']
     return _build_generic_repeatable_section('event', allowed_keys, *args)
+
+
+def build_linkingRightsStatementIdentifier(*args):
+    allowed_keys = ['linkingRightsStatementIdentifierType', 
+        'linkingRightsStatementIdentifierValue']
+    return _build_generic_repeatable_section('linkingRightsStatementIdentifier',
+        allowed_keys, *args)
+
+def build_accessRightsPolicy(policyId=None, policyParameters=None,
+        policyDescription=None):
+    return _build_generic_section('accessRightsPolicy', locals())
+
+
+def build_retentionPeriodPolicy(policyId=None, policyDescription=None):
+    return _build_generic_section('retentionPeriodPolicy', locals())
+
+def build_grantedRightsStatement(*args):
+    allowed_keys = ['grantedRightsStatementIdentifier', 
+        'grantedRightsStatementValue']
+    return _build_generic_repeatable_section('grantedRightsStatement',
+        allowed_keys, *args)
+
+
+def build_collection(*args):
+    allowed_keys = ['collectionID', 'collectionName', 'externalSystem',
+        'externalRecordId', 'parentCollectionId']
+    return _build_generic_repeatable_section('collection', allowed_keys,
+        *args)
+
+
+
+# generic builders for various DNX sections
+
+def build_ie_amdTech( 
+        generalIECharacteristics=None,
+        objectCharacteristics=None):
+    dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
+    if generalIECharacteristics != None:
+        for entry in generalIECharacteristics:
+            dnx.append(build_generalIECharacteristics(**entry))
+    if objectCharacteristics != None:
+        for entry in objectCharacteristics:
+            dnx.append(build_objectCharacteristics(**entry))
+    return dnx
+
+def build_rep_amdTech(
+    generalRepCharacteristics=None,
+    objectCharacteristics=None,
+    ):
+    dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
+    return locals()
+    
