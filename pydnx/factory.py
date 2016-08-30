@@ -140,6 +140,9 @@ def build_inhibitors(*args):
     return _build_generic_repeatable_section('inhibitors', allowed_keys,
         *args)
 
+def build_objectCharacteristicsExtension(objectCharacteristicsExtension=None):
+    return _build_generic_section('objectCharacteristicsExtension', locals())
+
 
 def build_environment(*args):
     allowed_keys = ['environmentCharacteristic', 'environmentPurpose',
@@ -186,6 +189,10 @@ def build_signatureInformation(*args):
         'keyInformation']
     return _build_generic_repeatable_section('signatureInformation',
         allowed_keys, *args)
+
+def build_signatureInformationExtension(signatureInformationExtension=None):
+    return _build_generic_section('signatureInformationExtension', locals())
+
 
 
 def build_relationship(*args):
@@ -250,22 +257,67 @@ def build_collection(*args):
 
 # generic builders for various DNX sections
 
-def build_ie_amdTech( 
-        generalIECharacteristics=None,
-        objectCharacteristics=None):
+# def build_ie_amdTech( 
+#         generalIECharacteristics=None,
+#         objectCharacteristics=None):
+#     dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
+#     if generalIECharacteristics != None:
+#         for entry in generalIECharacteristics:
+#             dnx.append(build_generalIECharacteristics(**entry))
+#     if objectCharacteristics != None:
+#         for entry in objectCharacteristics:
+#             dnx.append(build_objectCharacteristics(**entry))
+#     return dnx
+
+
+def build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs):
     dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
-    if generalIECharacteristics != None:
-        for entry in generalIECharacteristics:
-            dnx.append(build_generalIECharacteristics(**entry))
-    if objectCharacteristics != None:
-        for entry in objectCharacteristics:
-            dnx.append(build_objectCharacteristics(**entry))
+    for key, value in kwargs.items():
+        if key in non_repeatable_keys:
+            if len(value) == 1:
+                # print("DEBUG: key={}, value={}".format(key, value))
+                dnx.append(non_repeatable_keys[key](**value[0]))
+            else:
+                raise ValueError("{} is non-repeatable, and may only contain one dictionary of values")
+        if key in repeatable_keys:
+            dnx.append(repeatable_keys[key](value))
     return dnx
 
-def build_rep_amdTech(
-    generalRepCharacteristics=None,
-    objectCharacteristics=None,
-    ):
-    dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
-    return locals()
+def build_ie_amdTech(**kwargs):
+    non_repeatable_keys = {
+        'generalIECharacteristics': build_generalIECharacteristics,
+        'objectCharacteristics': build_objectCharacteristics
+    }
+    repeatable_keys = {}
+    return build_generic_amdSection(non_repeatable_keys, repeatable_keys,
+        **kwargs)
+
+def build_rep_amdTech(**kwargs):
+    non_repeatable_keys = {
+        'generalRepCharacteristics': build_generalRepCharacteristics,
+        'objectCharacteristics': build_objectCharacteristics
+    }
+    repeatable_keys = {}
+    return build_generic_amdSection(non_repeatable_keys, repeatable_keys,
+        **kwargs)
+
+def build_file_amdTech(**kwargs):
+    non_repeatable_keys = {
+        'generalFileCharacteristics': build_generalFileCharacteristics,
+        'objectCharacteristics': build_objectCharacteristics,
+        'creatingApplication': build_creatingApplication,
+        'signatureInformation': build_signatureInformation }
+    repeatable_keys = {'fileFixity': build_fileFixity,
+        'significantProperties': build_significantProperties,
+        'inhibitors': build_inhibitors,
+        'objectCharacteristicsExtension': build_objectCharacteristicsExtension,
+        'environment': build_environment, 
+        'environmentDependencies': build_environmentDependencies,
+        'environmentSoftwareRegistry': build_environmentSoftwareRegistry,
+        'environmentHardware': build_environmentHardware,
+        'envHardwareRegistry': build_envHardwareRegistry,
+        'environmentExtension': build_environmentExtension,
+        'signatureInformationExtension': build_signatureInformationExtension,
+        'relationship': build_relationship}
+    return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)
     

@@ -174,6 +174,14 @@ def test_inhibitors_bad_values():
          'inhibitorTarget': 'render',
          'animal': 'Horsey!'})
 
+def test_objectCharacteristicsExtension():
+    generic_good_values(f.build_objectCharacteristicsExtension,
+        objectCharacteristicsExtension="<test>Test XML</test>")
+
+def test_objectCharacteristicsExtension_bad_values():
+    generic_bad_values(f.build_objectCharacteristicsExtension,
+        animal='horsey!')
+
 
 def test_environment():
     generic_multi_record_good_values(f.build_environment,
@@ -279,6 +287,14 @@ def test_signatureInformation_bad_values():
     except ValueError:
         esr = None
     assert(esr == None)
+
+def test_signatureInformationExtension():
+    generic_good_values(f.build_signatureInformationExtension, 
+        signatureInformationExtension='<ext>Test Value</ext>')
+
+def test_signatureInformationExtension_bad_values():
+    generic_bad_values(f.build_signatureInformationExtension,
+        animal='horsey!')
 
 
 def test_relationship():
@@ -398,7 +414,39 @@ def test_build_ie_amdTech_bad_values():
     gic = [{'animal': 'horsey', 'IEEntityType': 'periodicIE'}]
     oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
     try:
-        ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic)
+        ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic,
+            objectCharacteristics=oc)
     except TypeError:
         ieamdtech = None
     assert(ieamdtech == None)
+
+
+def test_build_rep_amdTech():
+    grc = [{'label': 'Digital Original',
+        'preservationType': 'Preservation Master',
+        'usageType': 'VIEW',
+        'DigitalOriginal': 'true',
+        'RevisionNumber': '1'}]
+    repamdtech = f.build_rep_amdTech(generalRepCharacteristics=grc)
+    print(ET.tostring(repamdtech))
+
+
+def test_build_rep_amdTech_bad_values():
+    grc = [{'animal': 'horsey!'}]
+    try:
+        repamdtech = f.build_rep_amdTech(generalRepCharacteristics=grc)
+    except TypeError:
+        repamdtech = None
+    assert(repamdtech == None)
+
+def test_build_file_amdTech():
+    gfc = [{'label': 'good file', 'note': 'the very finest of files',
+        'fileOriginalName': 'awesome.tif',
+        'fileOriginalPath': '/home/employee/awesome.tif', 
+        'fileMIMEType': 'image/tiff'}]
+    obj_chars = [{'objectType': 'FILE'}]
+    creating_app = [{'creatingApplicationName': 'GIMP', 
+        'creatingApplicationVersion': 'v1.0.9'}]
+    fileamdtech = f.build_file_amdTech(generalFileCharacteristics=gfc,
+        objectCharacteristics=obj_chars, creatingApplication=creating_app)
+    print(ET.tostring(fileamdtech))
