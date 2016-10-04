@@ -3,10 +3,10 @@ from lxml import etree as ET
 
 DNX_NS = "http://www.exlibrisgroup.com/dps/dnx"
 dnx_nsmap = {
-    'dnx': DNX_NS
+    None: DNX_NS
 }
 
-ET.register_namespace('dnx', DNX_NS)
+# ET.register_namespace('', DNX_NS)
 
 GENERAL_REP_CHARACTERISTICS = ['label', 'preservationType', 'usageType',
     'representationEntityType', 'contentType', 'contextType', 'hardwareUsed',
@@ -19,22 +19,23 @@ GRC = {'label': None, 'preservationType': None, 'usageType': None}
 
 
 def _build_generic_section(section_name, keynames=None):
-    section = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}section', id=section_name)
-    record = ET.SubElement(section, '{http://www.exlibrisgroup.com/dps/dnx}record')
+    section = ET.Element('section', id=section_name)
+    record = ET.SubElement(section, 'record')
     for key in keynames:
         if keynames[key] != None:
-            record_key = ET.SubElement(record, '{http://www.exlibrisgroup.com/dps/dnx}key', id=key)
+            record_key = ET.SubElement(record, 'key', id=key)
             record_key.text = keynames[key]
     return section
 
 def _build_generic_repeatable_section(section_name, allowed_keys, *args):
-    section = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}section',
+    section = ET.Element('section',
         id=section_name)
+    # args = args[0]
     for arg in args:
-        record = ET.SubElement(section, '{http://www.exlibrisgroup.com/dps/dnx}record')
+        record = ET.SubElement(section, 'record')
         for key in arg.keys():
             if key in allowed_keys:
-                record_key = ET.SubElement(record, '{http://www.exlibrisgroup.com/dps/dnx}key')
+                record_key = ET.SubElement(record, 'key')
                 record_key.attrib['ID'] = key
                 record_key.text = arg[key]
             else:
@@ -65,7 +66,8 @@ def build_generalFileCharacteristics(label=None, note=None,
         fileLocation=None, fileOriginalName=None,
         fileOriginalPath=None, fileOriginalID=None, fileExtension=None,
         fileMIMEType=None, fileSizeBytes=None, storageID=None, streamRefId=None,
-        formatLibraryId=None, riskLibraryIdentifiers=None):
+        formatLibraryId=None, riskLibraryIdentifiers=None,
+        fileCreationDate=None, fileModificationDate=None):
         # Note: fileLocationType is used by the system - not really for pre-ingest use
         # Note: fileOriginalID is used by the system - not really for pre-ingest use
         # Note: fileExtension is used by the system - not really for pre-ingest use
@@ -107,12 +109,12 @@ def build_preservationLevel(preservationLevelValue=None,
 
 
 # def build_significantProperties(*args):
-#     section = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}section',
+#     section = ET.Element('section',
 #         id='significantProperties')
 #     for arg in args:
-#         record = ET.SubElement(section, '{http://www.exlibrisgroup.com/dps/dnx}record')
+#         record = ET.SubElement(section, 'record')
 #         for key in arg.keys():
-#             record_key = ET.SubElement(record, '{http://www.exlibrisgroup.com/dps/dnx}key')
+#             record_key = ET.SubElement(record, 'key')
 #             record_key.attrib['ID'] = key
 #             record_key.text = arg[key]
 #     return section
@@ -260,7 +262,7 @@ def build_collection(*args):
 # def build_ie_amdTech( 
 #         generalIECharacteristics=None,
 #         objectCharacteristics=None):
-#     dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
+#     dnx = ET.Element('dnx')
 #     if generalIECharacteristics != None:
 #         for entry in generalIECharacteristics:
 #             dnx.append(build_generalIECharacteristics(**entry))
@@ -271,22 +273,25 @@ def build_collection(*args):
 
 
 def build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs):
-    dnx = ET.Element('{http://www.exlibrisgroup.com/dps/dnx}dnx')
+    dnx = ET.Element('dnx', nsmap=dnx_nsmap)
     for key, value in kwargs.items():
         if key in non_repeatable_keys:
-            if len(value) == 1:
+            if (value != None) and (len(value) == 1):
                 # print("DEBUG: key={}, value={}".format(key, value))
                 dnx.append(non_repeatable_keys[key](**value[0]))
-            else:
+            elif (value != None):
                 raise ValueError("{} is non-repeatable, and may only contain one dictionary of values")
-        if key in repeatable_keys:
-            dnx.append(repeatable_keys[key](value))
+        if (key in repeatable_keys) and (value != None):
+            dnx.append(repeatable_keys[key](*value))
     return dnx
 
 def build_ie_amdTech(**kwargs):
     non_repeatable_keys = {
         'generalIECharacteristics': build_generalIECharacteristics,
-        'objectCharacteristics': build_objectCharacteristics
+        'objectCharacteristics': build_objectCharacteristics,
+        'CMS': build_cms,
+        'objectIdentifier': build_objectIdentifier,
+        'webHarvesting': build_webHarvesting
     }
     repeatable_keys = {}
     return build_generic_amdSection(non_repeatable_keys, repeatable_keys,
@@ -321,3 +326,12 @@ def build_file_amdTech(**kwargs):
         'relationship': build_relationship}
     return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)
     
+def build_ie_amdRights(**kwargs):
+    non_repeatable_keys = {'accessRightsPolicy': build_accessRightsPolicy}
+    repeatable_keys = {}
+    return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)
+
+def build_ie_amdDigiprov(**kwargs):
+    non_repeatable_keys = {}
+    repeatable_keys = {'event': build_event}
+    return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)

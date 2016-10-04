@@ -4,16 +4,16 @@ except ImportError:
     from distutils.core import setup
 
 config = {
-    'description': 'My Project',
-    'author': 'My Name',
+    'description': 'pydnx',
+    'author': 'Sean Mosely',
     'url': 'URL to get at it',
     'download_url': 'Where to download it',
-    'author_email': 'My email',
-    'version': 0.1',
-    'install_requires': ['nose'],
-    'packages': ['NAME'],
+    'author_email': 'sean.mosely@gmail.com',
+    'version': '0.1',
+    'install_requires': ['nose', 'lxml'],
+    'packages': ['pydnx'],
     'scripts': [],
-    'name': 'projectname'
+    'name': 'pydnx'
 }
 
 setup(**config)

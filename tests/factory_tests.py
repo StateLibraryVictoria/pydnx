@@ -420,7 +420,6 @@ def test_build_ie_amdTech_bad_values():
         ieamdtech = None
     assert(ieamdtech == None)
 
-
 def test_build_rep_amdTech():
     grc = [{'label': 'Digital Original',
         'preservationType': 'Preservation Master',
@@ -450,3 +449,54 @@ def test_build_file_amdTech():
     fileamdtech = f.build_file_amdTech(generalFileCharacteristics=gfc,
         objectCharacteristics=obj_chars, creatingApplication=creating_app)
     print(ET.tostring(fileamdtech))
+
+
+def test_build_ie_amdTech_with_cms():
+    gic = [{'submissionReason': 'bornDigital', 'IEEntityType': 'periodicIE'}]
+    oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
+    cms = [{'system': 'emu', "recordId": "88838"}]
+    ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic,
+        objectCharacteristics=oc, CMS=cms)
+    print(ET.tostring(ieamdtech))
+
+
+def test_build_ie_amdTech_with_cms_and_objectIdentifier():
+    gic = [{'submissionReason': 'bornDigital', 'IEEntityType': 'periodicIE'}]
+    oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
+    cms = [{'system': 'emu', "recordId": "88838"}]
+    oid = [{'objectIdentifierType': 'AlmaID', 'objectIdentifierValue': 'AAA90'}]
+    ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic,
+        objectCharacteristics=oc, CMS=cms, objectIdentifier=oid)
+    print(ET.tostring(ieamdtech))
+
+
+def test_build_ie_amdTech_with_webharvesting():
+    gic = [{'submissionReason': 'bornDigital', 'IEEntityType': 'periodicIE'}]
+    oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
+    cms = [{'system': 'emu', "recordId": "88838"}]
+    oid = [{'objectIdentifierType': 'AlmaID', 'objectIdentifierValue': 'AAA90'}]
+    web = [{'harvestDate': '2016-09-23 15:11:21.0', 
+        'primarySeedURL': 'http://www.thegoogles.com',
+        'targetName': 'The almighty Googles'}]
+    ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic,
+        objectCharacteristics=oc, CMS=cms, objectIdentifier=oid, webHarvesting=web)
+    print(ET.tostring(ieamdtech))
+
+
+def test_build_ie_amdRights():
+    rights = [{'policyId': '100', 'policyDescription': 'Open Access'}]
+    ieamdrights = f.build_ie_amdRights(accessRightsPolicy=rights)
+    print(ET.tostring(ieamdrights))
+
+
+def test_build_ie_amdDigiprov():
+    events = [{'eventType': 'PRE_INGEST',
+             'eventDescription': 'preconditioning',
+             'eventDateTime': '2016-08-21T09:17:22NZST',
+             'eventOutcome1': 'File extension changed from ".tx" to ".txt"'},
+             {'eventType': 'PRE_INGEST',
+             'eventDescription': 'preconditioning',
+             'eventDateTime': '2016-09-13T13:21:45NZST',
+             'eventOutcome1': 'File extension changed from ".txt" back to ".tx"'}]
+    ieamddigiprov = f.build_ie_amdDigiprov(event=events)
+    print(ET.tostring(ieamddigiprov))
