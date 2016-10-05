@@ -12,8 +12,8 @@ GENERAL_REP_CHARACTERISTICS = ['label', 'preservationType', 'usageType',
     'representationEntityType', 'contentType', 'contextType', 'hardwareUsed',
     'physicalCarrierMedia', 'derivedFromId', 'deliveryPriority',
     'orderingSequence', 'DigitalOriginal', 'RevisionNumber',
-    'RepresentationCode', 'TaskID', 'RepresentationOriginalName', 'UserDefinedA',
-    'UserDefinedB', 'UserDefinedC']
+    'RepresentationCode', 'TaskID', 'RepresentationOriginalName',
+    'UserDefinedA', 'UserDefinedB', 'UserDefinedC']
 
 GRC = {'label': None, 'preservationType': None, 'usageType': None}
 
@@ -39,22 +39,25 @@ def _build_generic_repeatable_section(section_name, allowed_keys, *args):
                 record_key.attrib['ID'] = key
                 record_key.text = arg[key]
             else:
-                raise ValueError("\"{}\" is not a permitted key in {} record dictionary ( acceptable values are {} )".format(
-                    key, section_name, allowed_keys))
+                raise ValueError("""\"{}\" is not a permitted key in {} 
+                    record dictionary ( acceptable values are {} )
+                    """.format(key, section_name, allowed_keys))
     return section
 
-def build_generalIECharacteristics(submissionReason=None, status=None, statusDate=None,
-        IEEntityType=None, UserDefinedA=None, UserDefinedB=None, UserDefinedC=None):
+def build_generalIECharacteristics(submissionReason=None, status=None,
+        statusDate=None, IEEntityType=None, UserDefinedA=None,
+        UserDefinedB=None, UserDefinedC=None):
         # Note: statusDate is used by the system - not really for pre-ingest use
         
     return _build_generic_section('generalIECharacteristics', locals())
 
 
-def build_generalRepCharacteristics(label=None, preservationType=None, usageType=None,
-        representationEntityType=None, contentType=None, contextType=None, hardwareUsed=None,
-        physicalCarrierMedia=None, derivedFromId=None, deliveryPriority=None,
-        orderingSequence=None, DigitalOriginal=None, RevisionNumber=None,
-        RepresentationCode=None, TaskID=None, RepresentationOriginalName=None, UserDefinedA=None,
+def build_generalRepCharacteristics(label=None, preservationType=None, 
+        usageType=None, representationEntityType=None, contentType=None,
+        contextType=None, hardwareUsed=None, physicalCarrierMedia=None,
+        derivedFromId=None, deliveryPriority=None, orderingSequence=None,
+        DigitalOriginal=None, RevisionNumber=None, RepresentationCode=None,
+        TaskID=None, RepresentationOriginalName=None, UserDefinedA=None, 
         UserDefinedB=None, UserDefinedC=None):
         # Mandatory: preservationType, usageType(only "VIEW" supported)
     return _build_generic_section('generalRepCharacteristics', locals())
@@ -65,8 +68,8 @@ def build_generalFileCharacteristics(label=None, note=None,
         FileEntityType=None, compositionLevel=None, fileLocationType=None, 
         fileLocation=None, fileOriginalName=None,
         fileOriginalPath=None, fileOriginalID=None, fileExtension=None,
-        fileMIMEType=None, fileSizeBytes=None, storageID=None, streamRefId=None,
-        formatLibraryId=None, riskLibraryIdentifiers=None,
+        fileMIMEType=None, fileSizeBytes=None, storageID=None, 
+        streamRefId=None, formatLibraryId=None, riskLibraryIdentifiers=None,
         fileCreationDate=None, fileModificationDate=None):
         # Note: fileLocationType is used by the system - not really for pre-ingest use
         # Note: fileOriginalID is used by the system - not really for pre-ingest use
@@ -98,7 +101,8 @@ def build_webHarvesting(primarySeedURL=None, WCTIdentifier=None,
 
 # internalIdentifier -- Not used for pre-ingest
 
-def build_objectIdentifier(objectIdentifierType=None, objectIdentifierValue=None):
+def build_objectIdentifier(objectIdentifierType=None, 
+            objectIdentifierValue=None):
     return _build_generic_section('objectIdentifier', locals())
 
 
@@ -107,17 +111,6 @@ def build_preservationLevel(preservationLevelValue=None,
         preservationLevelDateAssigned=None):
     return _build_generic_section('preservationLevel', locals())
 
-
-# def build_significantProperties(*args):
-#     section = ET.Element('section',
-#         id='significantProperties')
-#     for arg in args:
-#         record = ET.SubElement(section, 'record')
-#         for key in arg.keys():
-#             record_key = ET.SubElement(record, 'key')
-#             record_key.attrib['ID'] = key
-#             record_key.text = arg[key]
-#     return section
 
 def build_significantProperties(*args):
     allowed_keys = ['significantPropertiesType', 'significantPropertiesValue',
@@ -173,7 +166,11 @@ def build_environmentSoftwareRegistry(*args):
         ['registryId'], *args)
 
 def build_environmentHardware(*args):
-    allowed_keys = ['hardwareName', 'hardwareType', 'hardwareOtherInformation']
+    allowed_keys = [
+        'hardwareName', 
+        'hardwareType',
+        'hardwareOtherInformation'
+        ]
     return _build_generic_repeatable_section('environmentHardware',
         allowed_keys, *args)
 
@@ -186,9 +183,11 @@ def build_environmentExtension(*args):
         ['environmentExtension'], *args)
 
 def build_signatureInformation(*args):
-    allowed_keys = ['signatureInformationEncoding', 'signer', 'signatureMethod',
+    allowed_keys = [
+        'signatureInformationEncoding','signer','signatureMethod',
         'signatureValue', 'signatureValidationRules', 'signatureProperties',
-        'keyInformation']
+        'keyInformation'
+        ]
     return _build_generic_repeatable_section('signatureInformation',
         allowed_keys, *args)
 
@@ -214,11 +213,13 @@ def build_linkingIEIdentifier(*args):
         allowed_keys, *args)
 
 def build_event(*args):
-    allowed_keys = ['eventIdentifierType', 'eventIdentifierValue', 'eventType',
+    allowed_keys = [
+        'eventIdentifierType', 'eventIdentifierValue','eventType',
         'eventDescription', 'eventDateTime', 'eventOutcome1',
         'eventOutcomeDetail1', 'eventOutcomeDetailExtension1',
-        'eventOutcome2', 'eventOutcomeDetail2', 'eventOutcomeDetailExtension2',
-        'eventOutcome2', 'eventOutcomeDetail2', 'eventOutcomeDetailExtension2',
+        'eventOutcome2', 'eventOutcomeDetail2',
+        'eventOutcomeDetailExtension2', 'eventOutcome2',
+        'eventOutcomeDetail2', 'eventOutcomeDetailExtension2',
         'linkingAgentIdentifierXMLID1', 'linkingAgentIdentifierType1',
         'linkingAgentIdentifierValue1', 'linkingAgentRole1',
         'linkingAgentIdentifierXMLID2', 'linkingAgentIdentifierType2',
@@ -231,8 +232,10 @@ def build_event(*args):
 def build_linkingRightsStatementIdentifier(*args):
     allowed_keys = ['linkingRightsStatementIdentifierType', 
         'linkingRightsStatementIdentifierValue']
-    return _build_generic_repeatable_section('linkingRightsStatementIdentifier',
-        allowed_keys, *args)
+    return _build_generic_repeatable_section(
+            'linkingRightsStatementIdentifier',
+            allowed_keys,
+            *args)
 
 def build_accessRightsPolicy(policyId=None, policyParameters=None,
         policyDescription=None):
@@ -256,20 +259,7 @@ def build_collection(*args):
         *args)
 
 
-
 # generic builders for various DNX sections
-
-# def build_ie_amdTech( 
-#         generalIECharacteristics=None,
-#         objectCharacteristics=None):
-#     dnx = ET.Element('dnx')
-#     if generalIECharacteristics != None:
-#         for entry in generalIECharacteristics:
-#             dnx.append(build_generalIECharacteristics(**entry))
-#     if objectCharacteristics != None:
-#         for entry in objectCharacteristics:
-#             dnx.append(build_objectCharacteristics(**entry))
-#     return dnx
 
 
 def build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs):
@@ -280,7 +270,8 @@ def build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs):
                 # print("DEBUG: key={}, value={}".format(key, value))
                 dnx.append(non_repeatable_keys[key](**value[0]))
             elif (value != None):
-                raise ValueError("{} is non-repeatable, and may only contain one dictionary of values")
+                raise ValueError("{} is non-repeatable, and may only" + 
+                    " contain one dictionary of values")
         if (key in repeatable_keys) and (value != None):
             dnx.append(repeatable_keys[key](*value))
     return dnx
@@ -312,10 +303,11 @@ def build_file_amdTech(**kwargs):
         'objectCharacteristics': build_objectCharacteristics,
         'creatingApplication': build_creatingApplication,
         'signatureInformation': build_signatureInformation }
-    repeatable_keys = {'fileFixity': build_fileFixity,
+    repeatable_keys = {
+        'fileFixity': build_fileFixity,
         'significantProperties': build_significantProperties,
         'inhibitors': build_inhibitors,
-        'objectCharacteristicsExtension': build_objectCharacteristicsExtension,
+    'objectCharacteristicsExtension': build_objectCharacteristicsExtension,
         'environment': build_environment, 
         'environmentDependencies': build_environmentDependencies,
         'environmentSoftwareRegistry': build_environmentSoftwareRegistry,
@@ -324,14 +316,20 @@ def build_file_amdTech(**kwargs):
         'environmentExtension': build_environmentExtension,
         'signatureInformationExtension': build_signatureInformationExtension,
         'relationship': build_relationship}
-    return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)
+    return build_generic_amdSection(non_repeatable_keys,
+                                    repeatable_keys,
+                                    **kwargs)
     
 def build_ie_amdRights(**kwargs):
     non_repeatable_keys = {'accessRightsPolicy': build_accessRightsPolicy}
     repeatable_keys = {}
-    return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)
+    return build_generic_amdSection(non_repeatable_keys,
+                                    repeatable_keys,
+                                    **kwargs)
 
 def build_ie_amdDigiprov(**kwargs):
     non_repeatable_keys = {}
     repeatable_keys = {'event': build_event}
-    return build_generic_amdSection(non_repeatable_keys, repeatable_keys, **kwargs)
+    return build_generic_amdSection(non_repeatable_keys,
+                                    repeatable_keys,
+                                    **kwargs)

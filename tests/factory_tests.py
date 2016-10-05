@@ -95,23 +95,27 @@ def test_webHarvesting_with_bad_values():
         animal='Horsey!')
 
 def test_objectIdentifier():
-    generic_good_values(f.build_objectIdentifier, objectIdentifierType='RecordID',
+    generic_good_values(f.build_objectIdentifier, 
+        objectIdentifierType='RecordID',
         objectIdentifierValue='P8881')
 
 def test_objectIdentifier_with_bad_values():
-    generic_bad_values(f.build_objectIdentifier, objectIdentifierType='RecordID',
+    generic_bad_values(f.build_objectIdentifier, 
+        objectIdentifierType='RecordID',
         favouriteVehicle='Tractor')
 
 def test_preservationLevel():
     generic_good_values(f.build_preservationLevel, 
         preservationLevelValue='Preservation Master', 
-        preservationLevelRationale='Born Digital record to be retained as National Archives',
+        preservationLevelRationale='' +
+            'Born Digital record to be retained as National Archives',
         preservationLevelDateAssigned='2016-08-01')
 
 def test_preservationLevel_with_bad_values():
     generic_bad_values(f.build_preservationLevel, 
         preservationLevelValue='Preservation Master', 
-        preservationLevelRationale='Born Digital record to be retained as National Archives',
+        preservationLevelRationale='' +
+            'Born Digital record to be retained as National Archives',
         preservationLevelDateAssigned='2016-08-01',
         animal="Horsey-worsey")
 
@@ -187,7 +191,8 @@ def test_environment():
     generic_multi_record_good_values(f.build_environment,
         {'environmentCharacteristic': 'recommended',
          'environmentPurpose': 'edit',
-         'environmentNote': 'Microsoft Office Suite 6.0 on Windows 8 OS, 64-bit Intel processor'})
+         'environmentNote': 'Microsoft Office Suite 6.0 on Windows 8 OS,' + 
+            ' 64-bit Intel processor'})
 
 def test_environment_bad_values():
     generic_multi_record_bad_values(f.build_environment,
@@ -199,7 +204,8 @@ def test_environmentDependencies():
     generic_multi_record_good_values(f.build_environmentDependencies,
         {'dependencyName': 'TransformationProfile',
          'dependencyIdentifierValue1': 'URL',
-         'dependencyIdentifierValue1': 'http://transform.org/9988142/transform.xsl'})
+         'dependencyIdentifierValue1': '' + 
+            'http://transform.org/9988142/transform.xsl'})
 
 
 def test_environmentDependencies_bad_values():
@@ -226,7 +232,8 @@ def test_environmentSoftwareRegistry():
 
 def test_environmentSoftwareRegistry_bad_values():
     try:
-        esr = generic_multi_record_good_values(f.build_environmentSoftwareRegistry,
+        esr = generic_multi_record_good_values(
+            f.build_environmentSoftwareRegistry,
             {'animal': 'Horsey!'})
     except ValueError:
         esr = None
@@ -263,7 +270,8 @@ def test_envHardwareRegistry_bad_values():
 
 def test_environmentExtension():
     generic_multi_record_good_values(f.build_environmentExtension,
-        {'environmentExtension': '<xml><stub id="test">Stub XML</stub></xml>'})
+        {'environmentExtension': '' + 
+            '<xml><stub id="test">Stub XML</stub></xml>'})
 
 def test_environmentExtension_bad_values():
     try:
@@ -354,8 +362,9 @@ def test_linkingRightsStatementIdentifier():
 
 def test_linkingRightsStatementIdentifier_bad_values():
     try:
-        lrsi = generic_multi_record_bad_values(f.build_linkingRightsStatementIdentifier,
-            {'animal': 'horsey!'})
+        lrsi = generic_multi_record_bad_values(
+            f.build_linkingRightsStatementIdentifier,
+                {'animal': 'horsey!'})
     except ValueError:
         lrsi = None
     assert(lrsi == None)
@@ -371,7 +380,8 @@ def test_accessRightsPolicy_bad_values():
 
 def test_retentionPeriodPolicy():
     generic_good_values(f.build_retentionPeriodPolicy, policyId='99YEARS',
-        policyDescription="I got 99 problems but a retention policy ain't one")
+        policyDescription="" + 
+        "I got 99 problems but a retention policy ain't one")
 
 def test_retentionPeriodPolicy_bad_values():
     generic_bad_values(f.build_retentionPeriodPolicy, policyId='5YEARS',
@@ -384,8 +394,9 @@ def test_grantedRightsStatement():
 
 def test_grantedRightsStatement_bad_values():
     try:
-        grs = generic_multi_record_bad_values(f.build_linkingRightsStatementIdentifier,
-            {'animal': 'horsey!'})
+        grs = generic_multi_record_bad_values(
+            f.build_linkingRightsStatementIdentifier,
+                {'animal': 'horsey!'})
     except ValueError:
         grs = None
     assert(grs == None)
@@ -464,7 +475,8 @@ def test_build_ie_amdTech_with_cms_and_objectIdentifier():
     gic = [{'submissionReason': 'bornDigital', 'IEEntityType': 'periodicIE'}]
     oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
     cms = [{'system': 'emu', "recordId": "88838"}]
-    oid = [{'objectIdentifierType': 'AlmaID', 'objectIdentifierValue': 'AAA90'}]
+    oid = [{'objectIdentifierType': 'AlmaID',
+            'objectIdentifierValue': 'AAA90'}]
     ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic,
         objectCharacteristics=oc, CMS=cms, objectIdentifier=oid)
     print(ET.tostring(ieamdtech))
@@ -474,12 +486,17 @@ def test_build_ie_amdTech_with_webharvesting():
     gic = [{'submissionReason': 'bornDigital', 'IEEntityType': 'periodicIE'}]
     oc = [{'objectType': 'INTELLECTUAL_ENTITY'}]
     cms = [{'system': 'emu', "recordId": "88838"}]
-    oid = [{'objectIdentifierType': 'AlmaID', 'objectIdentifierValue': 'AAA90'}]
+    oid = [{'objectIdentifierType': 'AlmaID',
+            'objectIdentifierValue': 'AAA90'}]
     web = [{'harvestDate': '2016-09-23 15:11:21.0', 
         'primarySeedURL': 'http://www.thegoogles.com',
         'targetName': 'The almighty Googles'}]
-    ieamdtech = f.build_ie_amdTech(generalIECharacteristics=gic,
-        objectCharacteristics=oc, CMS=cms, objectIdentifier=oid, webHarvesting=web)
+    ieamdtech = f.build_ie_amdTech(
+            generalIECharacteristics=gic,
+            objectCharacteristics=oc,
+            CMS=cms,
+            objectIdentifier=oid,
+            webHarvesting=web)
     print(ET.tostring(ieamdtech))
 
 
@@ -497,6 +514,7 @@ def test_build_ie_amdDigiprov():
              {'eventType': 'PRE_INGEST',
              'eventDescription': 'preconditioning',
              'eventDateTime': '2016-09-13T13:21:45NZST',
-             'eventOutcome1': 'File extension changed from ".txt" back to ".tx"'}]
+             'eventOutcome1': 'File extension changed from' +
+                ' ".txt" back to ".tx"'}]
     ieamddigiprov = f.build_ie_amdDigiprov(event=events)
     print(ET.tostring(ieamddigiprov))
