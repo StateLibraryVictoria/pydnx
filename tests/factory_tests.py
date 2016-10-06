@@ -1,6 +1,7 @@
 from nose.tools import *
-import pydnx.factory as f
 from lxml import etree as ET
+
+import pydnx.factory as f
 
 
 def generic_good_values(builder_function, **kwargs):

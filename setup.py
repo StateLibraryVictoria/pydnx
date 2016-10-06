@@ -3,6 +3,8 @@ try:
 except ImportError:
     from distutils.core import setup
 
+VERSION="v0.1.0~git"
+
 config = {
     'description': 'pydnx',
     'author': 'Sean Mosely',
@@ -13,7 +15,8 @@ config = {
     'install_requires': ['lxml==3.6.4',],
     'packages': ['pydnx'],
     'scripts': [],
-    'name': 'pydnx'
+    'name': 'pydnx',
+    'download_url': 'https://github.com/NLNZDigitalPreservation/pydnx/archive/'+VERSION+'.tar.gz',
 }
 
 setup(**config)
