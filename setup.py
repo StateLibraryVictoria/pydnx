@@ -17,6 +17,7 @@ config = {
     'scripts': [],
     'name': 'pydnx',
     'download_url': 'https://github.com/NLNZDigitalPreservation/pydnx/archive/v'+VERSION+'.tar.gz',
+    'license': 'MIT',
 }
 
 setup(**config)
