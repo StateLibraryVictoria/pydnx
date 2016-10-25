@@ -36,7 +36,7 @@ def _build_generic_repeatable_section(section_name, allowed_keys, *args):
         for key in arg.keys():
             if key in allowed_keys:
                 record_key = ET.SubElement(record, 'key')
-                record_key.attrib['ID'] = key
+                record_key.attrib['id'] = key
                 record_key.text = arg[key]
             else:
                 raise ValueError("""\"{}\" is not a permitted key in {} 

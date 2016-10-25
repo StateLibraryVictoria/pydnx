@@ -519,3 +519,32 @@ def test_build_ie_amdDigiprov():
                 ' ".txt" back to ".tx"'}]
     ieamddigiprov = f.build_ie_amdDigiprov(event=events)
     print(ET.tostring(ieamddigiprov))
+
+
+def test_all_id_attribs_for_repeatable_key_elements_are_lowercase():
+    events = [{'eventType': 'PRE_INGEST',
+             'eventDescription': 'preconditioning',
+             'eventDateTime': '2016-08-21T09:17:22NZST',
+             'eventOutcome1': 'File extension changed from ".tx" to ".txt"'},
+             {'eventType': 'PRE_INGEST',
+             'eventDescription': 'preconditioning',
+             'eventDateTime': '2016-09-13T13:21:45NZST',
+             'eventOutcome1': 'File extension changed from' +
+                ' ".txt" back to ".tx"'}]
+    ieamddigiprov = f.build_ie_amdDigiprov(event=events)
+    keys = ieamddigiprov.findall(".//key")
+    for key in keys:
+        assert("id" in key.attrib)
+        print(key.attrib)
+        assert("ID" not in key.attrib)
+
+
+    fix = f.build_fileFixity({'fixityType': 'MD5',
+               'fixityValue': 'eu8eu43riui26263e663td6t393d'}, 
+               {'fixityType': 'SHA1',
+               'fixityValue': '37yre783hdjioejdp98'})
+    keys = fix.findall(".//key")
+    for key in keys:
+        assert("id" in key.attrib)
+        print(key.attrib)
+        assert("ID" not in key.attrib)
