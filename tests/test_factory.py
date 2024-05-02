@@ -1,4 +1,4 @@
-from nose.tools import *
+from pytest import *
 from lxml import etree as ET
 
 import pydnx.factory as f
